@@ -1,0 +1,20 @@
+# Entorno local
+.env
+*.log
+
+# Dependencias / herramientas
+vendor/
+node_modules/
+.idea/
+.vscode/
+.DS_Store
+
+# Datos de Docker (volúmenes locales)
+docker/mysql/data/
+
+# Entregables pesados (van al Drive, no al repo)
+docs/entrega/*.mp4
+docs/entrega/*.zip
+
+# Enunciado (se comparte por Drive, no por git)
+docs/document.pdf

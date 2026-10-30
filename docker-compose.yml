@@ -1,0 +1,45 @@
+services:
+  app:
+    build: .
+    container_name: luna_azul_app
+    ports:
+      - "${APP_PORT:-8080}:80"
+    volumes:
+      - .:/var/www/html          # cambios en el código se ven al instante
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0
+    container_name: luna_azul_db
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-hotel_luna_azul}
+      MYSQL_USER: ${DB_USER:-hotel}
+      MYSQL_PASSWORD: ${DB_PASS:-hotel123}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS:-root123}
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASS:-root123}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: luna_azul_phpmyadmin
+    ports:
+      - "${PHPMYADMIN_PORT:-8081}:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: ${DB_ROOT_PASS:-root123}
+    depends_on:
+      - db
