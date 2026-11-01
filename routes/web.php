@@ -3,14 +3,15 @@
  * Definición de rutas. Formato: $router->get('/ruta', [Controlador::class, 'metodo']);
  * Ir descomentando a medida que se creen los controladores.
  */
+use App\Controllers\AuthController;
 use App\Controllers\HomeController;
 
 $router->get('/', [HomeController::class, 'index']);
 
 // --- Autenticación ---
-// $router->get('/login',  [AuthController::class, 'showLogin']);
-// $router->post('/login', [AuthController::class, 'login']);
-// $router->get('/logout', [AuthController::class, 'logout']);
+$router->get('/login',   [AuthController::class, 'showLogin']);
+$router->post('/login',  [AuthController::class, 'login']);
+$router->post('/logout', [AuthController::class, 'logout']);
 
 // --- Huéspedes (CRUD) ---
 // $router->get('/huespedes',                [HuespedController::class, 'index']);

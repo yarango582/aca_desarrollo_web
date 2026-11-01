@@ -60,6 +60,7 @@ Para detener: `Ctrl+C` o `docker compose down`.
 ├── database/          schema.sql, seed.sql y migraciones futuras
 ├── docker/            Datos persistentes de MySQL (ignorado por git)
 ├── docs/              Enunciado, arquitectura y material de entrega
+├── tests/             Pruebas (runner propio, sin dependencias)
 ├── Dockerfile
 ├── docker-compose.yml
 ├── TAREAS.md          Qué falta por hacer y cómo repartirlo
@@ -75,6 +76,14 @@ Para detener: `Ctrl+C` o `docker compose down`.
 5. El controlador usa el modelo `Huesped` para consultar MySQL.
 6. El controlador renderiza `app/Views/huespedes/editar.php` dentro del layout.
 
+## Autenticación
+
+Todas las rutas exigen sesión por defecto: el constructor de `App\Core\Controller` llama a
+`Auth::requireLogin()`. Un controlador público (como `AuthController`) pone `protected bool $requiereAuth = false;`.
+Los formularios POST incluyen `<?= Csrf::campo() ?>` y el controlador valida con `Csrf::verificar($_POST['_csrf'] ?? null)`.
+
+Usuario de prueba: `admin@lunaazul.com` / `admin123`.
+
 ## Cómo añadir un módulo nuevo
 
 1. Crear el modelo en `app/Models/`, extendiendo `App\Core\Model` y definiendo `$table`.
@@ -84,10 +93,27 @@ Para detener: `Ctrl+C` o `docker compose down`.
 
 Hay ejemplos comentados en `routes/web.php` y un `HomeController` de referencia.
 
+## Pruebas
+
+No hay dependencias externas: `tests/run.php` es un runner propio en PHP. Las pruebas corren
+dentro del contenedor contra la base de datos real, así que el entorno debe estar levantado.
+
+```bash
+docker compose exec app php tests/run.php          # todas
+docker compose exec app php tests/run.php Usuario  # solo las que contengan "Usuario"
+```
+
+Para añadir pruebas: crear `tests/NombreTest.php` extendiendo `Tests\TestCase`; cada método que
+empiece por `test` se ejecuta. Las pruebas `Http*` hacen peticiones reales a Apache con cookies,
+útiles para probar formularios y redirecciones completas.
+
+Regla del equipo: cada módulo nuevo lleva sus pruebas y la suite completa debe quedar en verde
+antes de hacer merge a `main`.
+
 ## Reglas de trabajo en equipo
 
 - Rama `main` siempre funcional. Cada persona trabaja en su rama: `feature/huespedes`, `feature/reservas`, etc.
-- Antes de hacer merge a `main`, levantar con Docker y comprobar que no se rompió nada.
+- Antes de hacer merge a `main`, levantar con Docker y correr `docker compose exec app php tests/run.php`.
 - No subir el archivo `.env` ni la carpeta `docker/mysql/data`.
 - Los cambios al esquema van en `database/schema.sql` y se avisa al grupo.
 - Commits en español, cortos y descriptivos: `feat: CRUD de huéspedes`, `fix: validación de fechas`.
