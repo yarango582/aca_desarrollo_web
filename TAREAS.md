@@ -7,7 +7,7 @@ Marcar con `[x]` al completar y anotar quién lo toma. Cada bloque se puede trab
 
 ## 0. Preparación (todos)
 
-- [ ] Clonar el repo, copiar `.env.example` a `.env` y comprobar que `docker compose up` abre http://localhost:8080
+- [X] Clonar el repo, copiar `.env.example` a `.env` y comprobar que `docker compose up` abre http://localhost:8080
 - [ ] Acordar reparto de los bloques 1 a 4
 
 ## 1. Autenticación (rúbrica: sistema de autenticación seguro)
