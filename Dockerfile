@@ -16,4 +16,10 @@ COPY . /var/www/html
 
 RUN chown -R www-data:www-data /var/www/html
 
+# Script de arranque: corrige el MPM duplicado y escucha en $PORT (Railway)
+COPY docker/start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh \
+    && rm -f /etc/apache2/mods-enabled/mpm_event.* /etc/apache2/mods-enabled/mpm_worker.*
+
 EXPOSE 80
+CMD ["start.sh"]
