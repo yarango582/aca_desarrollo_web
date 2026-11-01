@@ -1,3 +1,7 @@
+<?php
+use App\Helpers\Auth;
+use App\Helpers\Csrf;
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -13,7 +17,11 @@
             <a href="/huespedes">Huéspedes</a>
             <a href="/reservas">Reservas</a>
             <a href="/habitaciones">Habitaciones</a>
-            <a href="/logout">Salir</a>
+            <span class="nav-user"><?= htmlspecialchars(Auth::user()['nombre'] ?? '') ?></span>
+            <form method="post" action="/logout" class="form-inline">
+                <?= Csrf::campo() ?>
+                <button type="submit" class="btn-link">Salir</button>
+            </form>
         </nav>
     </header>
 

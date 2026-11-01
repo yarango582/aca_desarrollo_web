@@ -8,16 +8,18 @@ Marcar con `[x]` al completar y anotar quién lo toma. Cada bloque se puede trab
 ## 0. Preparación (todos)
 
 - [X] Clonar el repo, copiar `.env.example` a `.env` y comprobar que `docker compose up` abre http://localhost:8080
-- [ ] Acordar reparto de los bloques 1 a 4
+- [X] Acordar reparto de los bloques 1 a 4
 
 ## 1. Autenticación (rúbrica: sistema de autenticación seguro)
 
-- [ ] Modelo `Usuario` (`app/Models/Usuario.php`)
-- [ ] `AuthController`: mostrar login, procesar login, logout
-- [ ] Vistas `app/Views/auth/login.php`
-- [ ] Contraseñas con `password_hash` / `password_verify`
-- [ ] Middleware o helper que redirija a `/login` si no hay sesión (proteger todas las rutas menos login)
-- [ ] Protección CSRF básica en formularios (token en sesión)
+- [x] Modelo `Usuario` (`app/Models/Usuario.php`)
+- [x] `AuthController`: mostrar login, procesar login, logout
+- [x] Vistas `app/Views/auth/login.php` y layout `auth.php`
+- [x] Contraseñas con `password_hash` / `password_verify`
+- [x] Helper `Auth` que redirige a `/login` si no hay sesión (todas las rutas protegidas por defecto)
+- [x] Protección CSRF en formularios (`Helpers/Csrf.php`)
+- [x] Pruebas: `tests/UsuarioTest.php`, `AuthTest.php`, `CsrfTest.php`, `HttpAuthTest.php`
+- [ ] Opcional: registro de usuarios desde el panel admin y roles (admin / recepción)
 
 ## 2. Módulo Huéspedes - CRUD (requisito central del enunciado)
 
