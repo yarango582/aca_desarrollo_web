@@ -110,6 +110,26 @@ empiece por `test` se ejecuta. Las pruebas `Http*` hacen peticiones reales a Apa
 Regla del equipo: cada módulo nuevo lleva sus pruebas y la suite completa debe quedar en verde
 antes de hacer merge a `main`.
 
+## Despliegue en Railway
+
+Railway construye con el `Dockerfile` del repo (rama `main`). El arranque lo hace `docker/start.sh`,
+que escucha en el puerto que Railway inyecta en `PORT`. Para que la app funcione hacen falta:
+
+1. Un servicio **MySQL** en el mismo proyecto de Railway.
+2. Estas variables en el servicio de la app, referenciando al MySQL:
+
+   | Variable  | Valor                        |
+   |-----------|------------------------------|
+   | DB_HOST   | `${{MySQL.MYSQLHOST}}`       |
+   | DB_PORT   | `${{MySQL.MYSQLPORT}}`       |
+   | DB_NAME   | `hotel_luna_azul`            |
+   | DB_USER   | `${{MySQL.MYSQLUSER}}`       |
+   | DB_PASS   | `${{MySQL.MYSQLPASSWORD}}`   |
+
+3. Cargar el esquema y los datos una sola vez en el MySQL de Railway (desde la pestaña Data
+   o con un cliente MySQL usando la URL pública del servicio): primero `database/schema.sql`
+   y después `database/seed.sql`.
+
 ## Reglas de trabajo en equipo
 
 - Rama `main` siempre funcional. Cada persona trabaja en su rama: `feature/huespedes`, `feature/reservas`, etc.
